@@ -4,6 +4,7 @@ using Moq;
 using PruebaRedsoft.Controllers;
 using PruebaRedsoft.Models;
 using PruebaRedsoft.Services;
+using System.Security.Claims;
 
 namespace PruebaRedsoft.Tests
 {
@@ -19,7 +20,27 @@ namespace PruebaRedsoft.Tests
         {
             mockPolicyService = new Mock<IPolicyService>();
             mockJwtService = new Mock<IJwtService>();
+
+            // Mock ClaimsIdentity
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, "Test user"),
+                // Add other claims as needed
+            };
+            var identity = new ClaimsIdentity(claims, "TestAuthType");
+            var claimsPrincipal = new ClaimsPrincipal(identity);
+
             policyController = new PolicyController(mockPolicyService.Object, mockJwtService.Object);
+
+            // Setup the controller context
+            policyController.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+            };
+
+            // Set up mockJwtService to return success
+            mockJwtService.Setup(service => service.ValidateToken(It.IsAny<ClaimsIdentity>()))
+                .Returns(new { success = true });
         }
 
         [TestMethod]
