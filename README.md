@@ -276,16 +276,16 @@ Pruebas de crear
                  return await _policys.Find(filter).FirstOrDefaultAsync();
               }
             
-    --------------
-   Prueba de busqueda
-    ---------------
-    la consulta hecha al endpoint /api/Policy/search?policyNumber=12&licensePlate=AMD123 da los siguientes resultaods
+-------------
+Prueba de busqueda
+---------------
+la consulta hecha al endpoint /api/Policy/search?policyNumber=12&licensePlate=AMD123 da los siguientes resultaods
     
-    ![image](https://github.com/juxnmxG/PruebaRedsoft/assets/61563571/d432478b-e95c-4131-b007-87ed8f810362)
-    para una busqueda fallida el resultado es el de la imagen anterior.
+![image](https://github.com/juxnmxG/PruebaRedsoft/assets/61563571/d432478b-e95c-4131-b007-87ed8f810362)
+para una busqueda fallida el resultado es el de la imagen anterior.
     
-    ![image](https://github.com/juxnmxG/PruebaRedsoft/assets/61563571/4846a346-3452-49d9-ba54-a3775e430522)
-    Resultado de una consulta conresultado positivo.
+![image](https://github.com/juxnmxG/PruebaRedsoft/assets/61563571/4846a346-3452-49d9-ba54-a3775e430522)
+Resultado de una consulta conresultado positivo.
 -----------------
 Pruebas Unitarias 
 ------------------
