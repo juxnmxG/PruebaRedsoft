@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PruebaRedsoft.Models;
 using PruebaRedsoft.Services;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using System.Security.Claims;
 
 namespace PruebaRedsoft.Controllers
 {
@@ -11,21 +11,38 @@ namespace PruebaRedsoft.Controllers
     public class PolicyController : ControllerBase
     {
         private readonly IPolicyService policyService;
+        private readonly IJwtService jwtService;
 
-        public PolicyController(IPolicyService policyService) {
+        public PolicyController(IPolicyService policyService, IJwtService jwtService) {
             this.policyService = policyService;
+            this.jwtService = jwtService;
         }
-        // GET: api/<PolicyController>
+
         [HttpGet]
         public ActionResult<List<Policy>> Get()
         {
+            ClaimsIdentity? indentity = HttpContext.User.Identity as ClaimsIdentity;
+            dynamic resultToken = jwtService.ValidateToken(indentity);
+
+            if (!resultToken.success)
+            {
+                return NotFound("Error en la autenticacion");
+            }
+
             return policyService.Get();
         }
 
-        // GET api/<PolicyController>/5
         [HttpGet("{id}")]
         public ActionResult<Policy> Get(string id)
         {
+            ClaimsIdentity? indentity = HttpContext.User.Identity as ClaimsIdentity;
+            dynamic resultToken = jwtService.ValidateToken(indentity);
+
+            if (!resultToken.success)
+            {
+                return NotFound("Error en la autenticacion");
+            }
+
             var existingPolicy = policyService.Get(id);
 
             if (existingPolicy == null)
@@ -35,19 +52,33 @@ namespace PruebaRedsoft.Controllers
             return existingPolicy;
         }
 
-        // POST api/<PolicyController>
         [HttpPost]
         public ActionResult<Policy> Post([FromBody] Policy policy)
         {
+            ClaimsIdentity? indentity = HttpContext.User.Identity as ClaimsIdentity;
+            dynamic resultToken = jwtService.ValidateToken(indentity);
+
+            if (!resultToken.success)
+            {
+                return NotFound("Error en la autenticacion");
+            }
+
             policyService.Create(policy);
 
             return CreatedAtAction(nameof(Get), new { id = policy.Id }, policy);
         }
 
-        // PUT api/<PolicyController>/5
         [HttpPut("{id}")]
         public ActionResult Put(string id, [FromBody] Policy policy)
         {
+            ClaimsIdentity? indentity = HttpContext.User.Identity as ClaimsIdentity;
+            dynamic resultToken = jwtService.ValidateToken(indentity);
+
+            if (!resultToken.success)
+            {
+                return NotFound("Error en la autenticacion");
+            }
+
             var existingPolicy = policyService.Get(id);
 
             if (existingPolicy == null)
@@ -60,15 +91,21 @@ namespace PruebaRedsoft.Controllers
             return NoContent();
         }
 
-        // DELETE api/<PolicyController>/5
         [HttpDelete("{id}")]
         public ActionResult Delete(string id)
         {
+            ClaimsIdentity? indentity = HttpContext.User.Identity as ClaimsIdentity;
+            dynamic resultToken = jwtService.ValidateToken(indentity);
+
+            if (!resultToken.success) {
+                return NotFound("Error en la autenticacion");
+            }
+
             var existingPolicy = policyService.Get(id);
 
             if (existingPolicy == null)
             {
-                return NotFound($"Poliza con el id = {id}");
+                return NotFound($"Poliza con el id = {id} no existe");
             }
 
             policyService.Delete(id);
@@ -79,6 +116,14 @@ namespace PruebaRedsoft.Controllers
         [HttpGet("search")]
         public async Task<ActionResult<Policy>> GetPolicy(int policyNumber, string licensePlate)
         {
+            ClaimsIdentity? indentity = HttpContext.User.Identity as ClaimsIdentity;
+            dynamic resultToken = jwtService.ValidateToken(indentity);
+
+            if (!resultToken.success)
+            {
+                return NotFound("Error en la autenticacion");
+            }
+
             var policy = await policyService.GetByPolicyNumberOrLicensePlate(policyNumber, licensePlate);
 
             if (policy == null)
