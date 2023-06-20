@@ -381,3 +381,15 @@ Codigo y resultado de los test realizados a al Controlado de polizas
  ![image](https://github.com/juxnmxG/PruebaRedsoft/assets/61563571/823c1db4-8876-42ff-9621-5267a8eef6ff)
 Resultado de Tests realizados 
  
+---------------------
+Nota
+---------------------
+Para poder ingresar al sistema he dejado un usuario estatico por lo cual para obtener el token se de ingresar al endpoint /api/login
+![image](https://github.com/juxnmxG/PruebaRedsoft/assets/61563571/626d2105-b524-4caf-b323-04a293e29a85)
+
+
+Los datos de ingreso serian:
+                {
+                    "name": "JuanM",
+                    "password": "admin123"
+                }
